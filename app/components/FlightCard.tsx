@@ -16,11 +16,10 @@ export default function FlightCard({ flight, stagger = 0, onOpen }: Props) {
     <button
       type="button"
       onClick={onOpen}
-      disabled={!isOpen}
       className={`card-enter group relative flex w-full flex-col items-stretch overflow-hidden rounded-2xl border text-left transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
         isOpen
           ? "border-amber-200 bg-gradient-to-br from-amber-50 via-amber-50/40 to-white shadow-[0_4px_30px_-12px_rgba(217,119,6,0.35)] hover:-translate-y-0.5 hover:shadow-[0_18px_44px_-16px_rgba(217,119,6,0.45)] focus-visible:ring-amber-400"
-          : "cursor-default border-slate-200 bg-white opacity-70 saturate-50 shadow-none"
+          : "border-slate-200 bg-white opacity-70 saturate-50 shadow-none hover:opacity-90 hover:saturate-75 hover:shadow-sm focus-visible:ring-slate-400"
       }`}
       style={{ animationDelay: `${stagger * 40}ms` }}
     >
@@ -84,7 +83,21 @@ export default function FlightCard({ flight, stagger = 0, onOpen }: Props) {
             </span>
           </>
         ) : (
-          <p className="text-xs text-slate-500">{handledHelpText(flight.status)}</p>
+          <>
+            <p className="text-xs text-slate-500">{handledHelpText(flight.status)}</p>
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 transition group-hover:gap-1.5 group-hover:text-slate-700">
+              View
+              <svg
+                viewBox="0 0 16 16"
+                className="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M6 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </>
         )}
       </div>
     </button>

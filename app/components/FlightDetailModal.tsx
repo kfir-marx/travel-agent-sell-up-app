@@ -181,65 +181,81 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
             <ContactCard label="Phone" value={f.phone} icon="phone" />
           </section>
 
-          <section className="mt-6 rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 via-amber-50/50 to-white p-6 shadow-[0_8px_30px_-12px_rgba(217,119,6,0.35)]">
-            <div className="flex items-start gap-3">
-              <span className="inline-flex h-8 w-8 flex-none items-center justify-center rounded-full bg-amber-500/15 text-amber-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
-                  <path d="M3 7h18M3 12h18M3 17h12" strokeLinecap="round" />
-                </svg>
-              </span>
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-800">
-                  Hotel upsell
-                </p>
-                <h3 className="mt-1 text-base font-semibold leading-snug text-slate-900">
-                  Would you like to book a hotel independently for this booking?
-                </h3>
-                <p className="mt-1.5 text-sm text-slate-600">
-                  We&apos;ll WhatsApp {f.passengerName.split(/[&,]/)[0].trim()} a curated
-                  shortlist of 3 partner hotels at unpublished rates. Your projected
-                  commission on conversion is{" "}
-                  <span className="font-semibold text-amber-700">
-                    {formatUsd(commission, { decimals: true })}
-                  </span>
-                  .
-                </p>
+          {f.status === "open" ? (
+            <section className="mt-6 rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 via-amber-50/50 to-white p-6 shadow-[0_8px_30px_-12px_rgba(217,119,6,0.35)]">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-8 w-8 flex-none items-center justify-center rounded-full bg-amber-500/15 text-amber-700">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+                    <path d="M3 7h18M3 12h18M3 17h12" strokeLinecap="round" />
+                  </svg>
+                </span>
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-800">
+                    Hotel upsell
+                  </p>
+                  <h3 className="mt-1 text-base font-semibold leading-snug text-slate-900">
+                    Would you like to book a hotel independently for this booking?
+                  </h3>
+                  <p className="mt-1.5 text-sm text-slate-600">
+                    We&apos;ll WhatsApp {f.passengerName.split(/[&,]/)[0].trim()} a curated
+                    shortlist of 3 partner hotels at unpublished rates. Your projected
+                    commission on conversion is{" "}
+                    <span className="font-semibold text-amber-700">
+                      {formatUsd(commission, { decimals: true })}
+                    </span>
+                    .
+                  </p>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          ) : (
+            <HandledStatusCard flight={f} commission={commission} />
+          )}
         </div>
 
         <footer className="border-t border-slate-100 bg-slate-50/60 px-7 py-5">
-          <div className="flex gap-3">
+          {f.status === "open" ? (
+            <>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleNo}
+                  disabled={!!working}
+                  className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 active:scale-[0.99] disabled:opacity-60"
+                >
+                  No, skip
+                </button>
+                <button
+                  type="button"
+                  onClick={handleYes}
+                  disabled={!!working}
+                  className="group relative flex-[1.6] overflow-hidden rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(234,88,12,0.6)] transition hover:from-amber-400 hover:to-orange-400 active:scale-[0.99] disabled:opacity-70"
+                >
+                  <span className="relative inline-flex items-center justify-center gap-2">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                      <path d="M20 4 9 15l-5-5" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Yes, send WhatsApp offer
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-y-0 -left-1/3 w-1/3 bg-white/30 blur-md transition-transform duration-700 ease-out group-hover:translate-x-[450%]"
+                  />
+                </button>
+              </div>
+              <p className="mt-3 text-center text-[11px] text-slate-500">
+                Sends via Twilio WhatsApp Business · receipt logged to the booking
+              </p>
+            </>
+          ) : (
             <button
               type="button"
-              onClick={handleNo}
-              disabled={!!working}
-              className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 active:scale-[0.99] disabled:opacity-60"
+              onClick={onClose}
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 active:scale-[0.99]"
             >
-              No, skip
+              Close
             </button>
-            <button
-              type="button"
-              onClick={handleYes}
-              disabled={!!working}
-              className="group relative flex-[1.6] overflow-hidden rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(234,88,12,0.6)] transition hover:from-amber-400 hover:to-orange-400 active:scale-[0.99] disabled:opacity-70"
-            >
-              <span className="relative inline-flex items-center justify-center gap-2">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
-                  <path d="M20 4 9 15l-5-5" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                Yes, send WhatsApp offer
-              </span>
-              <span
-                aria-hidden
-                className="absolute inset-y-0 -left-1/3 w-1/3 bg-white/30 blur-md transition-transform duration-700 ease-out group-hover:translate-x-[450%]"
-              />
-            </button>
-          </div>
-          <p className="mt-3 text-center text-[11px] text-slate-500">
-            Sends via Twilio WhatsApp Business · receipt logged to the booking
-          </p>
+          )}
         </footer>
       </aside>
     </div>
@@ -309,5 +325,96 @@ function ContactCard({
         <p className="truncate text-sm font-medium text-slate-900">{value}</p>
       </div>
     </div>
+  );
+}
+
+function HandledStatusCard({
+  flight,
+  commission,
+}: {
+  flight: Flight;
+  commission: number;
+}) {
+  const variant = {
+    upsold: {
+      tone: "border-emerald-200 from-emerald-50 via-emerald-50/40 shadow-[0_8px_30px_-12px_rgba(16,185,129,0.35)]",
+      pillBg: "bg-emerald-500/15 text-emerald-700",
+      eyebrow: "text-emerald-800",
+      label: "Upsell sent",
+      title: "WhatsApp offer delivered",
+      body: (
+        <>
+          A curated hotel shortlist has been sent to{" "}
+          <span className="font-medium text-slate-900">{flight.email}</span>. Commission
+          on conversion is{" "}
+          <span className="font-semibold text-emerald-700">
+            {formatUsd(commission, { decimals: true })}
+          </span>
+          .
+        </>
+      ),
+    },
+    declined: {
+      tone: "border-slate-200 from-slate-50 via-slate-50/40 shadow-none",
+      pillBg: "bg-slate-200 text-slate-700",
+      eyebrow: "text-slate-700",
+      label: "Skipped",
+      title: "Upsell not offered",
+      body: (
+        <>
+          The agent chose not to send a hotel offer for this booking. No customer
+          outreach was made.
+        </>
+      ),
+    },
+    past: {
+      tone: "border-slate-200 from-slate-50 via-slate-50/40 shadow-none",
+      pillBg: "bg-slate-200 text-slate-700",
+      eyebrow: "text-slate-700",
+      label: "Hotel on file",
+      title: "Hotel already booked",
+      body: (
+        <>
+          This traveler already has a hotel booked through Atlas Travel for these dates.
+          No further outreach needed.
+        </>
+      ),
+    },
+    open: null,
+  }[flight.status];
+
+  if (!variant) return null;
+
+  return (
+    <section
+      className={`mt-6 rounded-2xl border bg-gradient-to-br to-white p-6 ${variant.tone}`}
+    >
+      <div className="flex items-start gap-3">
+        <span
+          className={`inline-flex h-8 w-8 flex-none items-center justify-center rounded-full ${variant.pillBg}`}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="h-4 w-4"
+          >
+            <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+        <div>
+          <p
+            className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${variant.eyebrow}`}
+          >
+            {variant.label}
+          </p>
+          <h3 className="mt-1 text-base font-semibold leading-snug text-slate-900">
+            {variant.title}
+          </h3>
+          <p className="mt-1.5 text-sm text-slate-600">{variant.body}</p>
+        </div>
+      </div>
+    </section>
   );
 }

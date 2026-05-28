@@ -90,7 +90,12 @@ export default function AgentView() {
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {sortedHandled.map((f, i) => (
-              <FlightCard key={f.id} flight={f} stagger={i} />
+              <FlightCard
+                key={f.id}
+                flight={f}
+                stagger={i}
+                onOpen={() => setSelectedId(f.id)}
+              />
             ))}
           </div>
         </>
