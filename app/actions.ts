@@ -1,22 +1,25 @@
 "use server";
 
-export type BookingInput = {
-  customerName: string;
+export type UpsellInput = {
+  flightId: string;
+  bookingRef: string;
+  passengerName: string;
   customerEmail: string;
   customerPhone: string;
-  destination: string;
+  destinationCity: string;
   departureDate: string;
   returnDate: string;
 };
 
-export type BookingResult =
+export type UpsellResult =
   | { ok: true; sid: string }
   | { ok: false; error: string };
 
 const TWILIO_ACCOUNT_SID = "AC0fda4ccfc5b7b6b642edfa4b6e8b9804";
 const TWILIO_FROM = "whatsapp:+14155238886";
+const LANDING_PAGE_BASE = "https://atlas-travel.example.com/hotels";
 
-export async function bookFlight(input: BookingInput): Promise<BookingResult> {
+export async function sendUpsellWhatsApp(input: UpsellInput): Promise<UpsellResult> {
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const agentPhoneNumber = process.env.AGENT_PHONE_NUMBER;
 
@@ -27,11 +30,14 @@ export async function bookFlight(input: BookingInput): Promise<BookingResult> {
     return { ok: false, error: "Missing AGENT_PHONE_NUMBER environment variable." };
   }
 
+  const landingUrl = `${LANDING_PAGE_BASE}/${input.bookingRef}`;
   const messageBody =
-    `Flight confirmed for ${input.customerName} to ${input.destination}! ✈️ ` +
-    `Want to increase your margin? We found 3 bulk-rate hotels available for these dates. \n\n` +
-    `👉 Click here to book instantly: https://example.com/book \n` +
-    `👉 Click here to forward options to ${input.customerName}: https://example.com/forward`;
+    `Hi ${input.passengerName.split(/[&,]/)[0].trim()}! ✈️\n\n` +
+    `Your Atlas Travel trip to ${input.destinationCity} (${input.departureDate} → ${input.returnDate}) is confirmed.\n\n` +
+    `We secured 3 partner hotels at unpublished rates for your dates. ` +
+    `Hold any of them with one tap — no charge until check-in:\n\n` +
+    `👉 ${landingUrl}\n\n` +
+    `Reply STOP to opt out.`;
 
   const body = new URLSearchParams({
     To: `whatsapp:${agentPhoneNumber}`,

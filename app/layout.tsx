@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Atlas Travel — Agent Dashboard",
-  description: "Internal travel agent dashboard for managing customer bookings.",
+  title: "Atlas Travel — Upsell Suite",
+  description:
+    "Travel agent upsell suite: surface every flight without a hotel and convert it with a single tap.",
 };
 
 export default function RootLayout({
