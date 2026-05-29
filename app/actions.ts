@@ -33,12 +33,12 @@ export async function sendUpsellWhatsApp(input: UpsellInput): Promise<UpsellResu
   // const landingUrl = `${LANDING_PAGE_BASE}/${input.bookingRef}`;
   const landingUrl = `https://app.letstay.co.il/results?place_id=ChIJOwg_06VPwokRYv534QaPC8g&check_in=260530&check_out=260621&guests=2&rooms=1&private_travel=true&utm_source=letstay`;
   const messageBody =
-    `Hi ${input.passengerName.split(/[&,]/)[0].trim()}! ✈️\n\n` +
-    `Your Atlas Travel trip to ${input.destinationCity} (${input.departureDate} → ${input.returnDate}) is confirmed.\n\n` +
-    `We secured 3 partner hotels at unpublished rates for your dates. ` +
-    `Hold any of them with one tap — no charge until check-in:\n\n` +
+    `היי ${input.passengerName.split(/[&,]/)[0].trim()}! ✈️\n\n` +
+    `הנסיעה שלך עם Atlas Travel ל-${input.destinationCity} (${input.departureDate} - ${input.returnDate}) אושרה.\n\n` +
+    `מצאנו עבורך 3 מלונות במחירים בלעדיים לתאריכים שלך. ` +
+    `ניתן לשריין כל אחד מהם בלחיצה אחת — ללא חיוב עד הצ'ק-אין:\n\n` +
     `👉 ${landingUrl}\n\n` +
-    `Reply STOP to opt out.`;
+    `להסרה השב STOP.`;
 
   const body = new URLSearchParams({
     To: `whatsapp:${agentPhoneNumber}`,
