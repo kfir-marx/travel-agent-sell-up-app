@@ -3,12 +3,14 @@
 import { useMemo, useState } from "react";
 import { useDemo } from "../lib/store";
 import type { Flight } from "../lib/types";
+import AddFlightModal from "./AddFlightModal";
 import FlightCard from "./FlightCard";
 import FlightDetailModal from "./FlightDetailModal";
 
 export default function AgentView() {
   const { flights, activeAgentId, t, fmt } = useDemo();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
 
   const myFlights = useMemo(
     () => flights.filter((f) => f.agentId === activeAgentId),
@@ -58,9 +60,23 @@ export default function AgentView() {
           <p className="mt-1.5 text-sm text-slate-500">{subtitle}</p>
         </div>
 
-        <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm">
-          <Pill tone="amber" count={open.length} label={t("agent.pill.upsellAvailable")} />
-          <Pill tone="slate" count={handled.length} label={t("agent.pill.handled")} />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm">
+            <Pill tone="amber" count={open.length} label={t("agent.pill.upsellAvailable")} />
+            <Pill tone="slate" count={handled.length} label={t("agent.pill.handled")} />
+          </div>
+          <button
+            type="button"
+            onClick={() => setAddOpen(true)}
+            className="group inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(234,88,12,0.55)] transition hover:from-amber-400 hover:to-orange-400 active:scale-[0.99]"
+          >
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20 transition group-hover:bg-white/30">
+              <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
+                <path d="M10 4v12M4 10h12" strokeLinecap="round" />
+              </svg>
+            </span>
+            {t("newFlight.btn.add")}
+          </button>
         </div>
       </section>
 
@@ -105,6 +121,7 @@ export default function AgentView() {
       )}
 
       <FlightDetailModal flight={selected} onClose={() => setSelectedId(null)} />
+      <AddFlightModal open={addOpen} onClose={() => setAddOpen(false)} />
     </>
   );
 }

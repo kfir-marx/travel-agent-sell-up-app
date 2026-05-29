@@ -106,6 +106,29 @@ const EN: Dict = {
   "agency.mix.declined": "Declined",
   "agency.mix.past": "Hotel on file",
   "agency.mix.footer": "Closing every remaining open booking would add {amount} to this quarter's commission.",
+
+  // add-flight modal
+  "newFlight.btn.add": "Add flight",
+  "newFlight.modal.eyebrow": "New booking",
+  "newFlight.modal.title": "Add a flight to the pipeline",
+  "newFlight.modal.subtitle": "We'll auto-generate the booking reference, pricing, and party size. You can pitch the hotel upsell right after.",
+  "newFlight.field.name": "Passenger name",
+  "newFlight.field.from": "From",
+  "newFlight.field.to": "To",
+  "newFlight.field.depart": "Departure",
+  "newFlight.field.return": "Return",
+  "newFlight.field.email": "Email",
+  "newFlight.field.phone": "Phone",
+  "newFlight.placeholder.name": "e.g. Jordan Riley",
+  "newFlight.placeholder.from": "e.g. New York",
+  "newFlight.placeholder.to": "e.g. Tokyo",
+  "newFlight.placeholder.email": "e.g. jordan@example.com",
+  "newFlight.placeholder.phone": "e.g. +1 415 555 0100",
+  "newFlight.btn.cancel": "Cancel",
+  "newFlight.btn.submit": "Add to pipeline",
+  "newFlight.aria.close": "Close",
+  "newFlight.toast.title": "Booking added",
+  "newFlight.toast.body": "{name} · {origin} → {destination}",
 };
 
 const HE: Dict = {
@@ -207,6 +230,29 @@ const HE: Dict = {
   "agency.mix.declined": "סורבו",
   "agency.mix.past": "מלון בתיק",
   "agency.mix.footer": "סגירת כל ההזמנות הפתוחות הנותרות תוסיף {amount} לעמלת הרבעון.",
+
+  // add-flight modal
+  "newFlight.btn.add": "הוספת טיסה",
+  "newFlight.modal.eyebrow": "הזמנה חדשה",
+  "newFlight.modal.title": "הוספת טיסה לצבר",
+  "newFlight.modal.subtitle": "אנו ניצור באופן אוטומטי את מספר ההזמנה, התמחור וגודל הקבוצה. תוכלי להציע את שדרוג המלון מיד לאחר מכן.",
+  "newFlight.field.name": "שם הנוסע",
+  "newFlight.field.from": "מאיפה",
+  "newFlight.field.to": "לאן",
+  "newFlight.field.depart": "יציאה",
+  "newFlight.field.return": "חזרה",
+  "newFlight.field.email": "אימייל",
+  "newFlight.field.phone": "טלפון",
+  "newFlight.placeholder.name": "לדוגמה: יונתן ריילי",
+  "newFlight.placeholder.from": "לדוגמה: ניו יורק",
+  "newFlight.placeholder.to": "לדוגמה: טוקיו",
+  "newFlight.placeholder.email": "לדוגמה: jordan@example.com",
+  "newFlight.placeholder.phone": "לדוגמה: ‎+1 415 555 0100",
+  "newFlight.btn.cancel": "ביטול",
+  "newFlight.btn.submit": "הוספה לצבר",
+  "newFlight.aria.close": "סגירה",
+  "newFlight.toast.title": "ההזמנה נוספה",
+  "newFlight.toast.body": "{name} · {origin} ← {destination}",
 };
 
 export const DICTIONARIES: Record<Lang, Dict> = { en: EN, he: HE };

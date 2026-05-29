@@ -34,6 +34,16 @@ type Formatters = {
   number: (n: number) => string;
 };
 
+export type NewFlightInput = {
+  passengerName: string;
+  originCity: string;
+  destinationCity: string;
+  departureDate: string;
+  returnDate: string;
+  email: string;
+  phone: string;
+};
+
 type DemoStore = {
   flights: Flight[];
   agents: Agent[];
@@ -42,6 +52,7 @@ type DemoStore = {
   setView: (view: View) => void;
   markUpsold: (flightId: string) => void;
   markDeclined: (flightId: string) => void;
+  addFlight: (input: NewFlightInput) => Flight;
   pushToast: (toast: Omit<Toast, "id">) => void;
   toasts: Toast[];
   dismissToast: (id: number) => void;
@@ -50,6 +61,69 @@ type DemoStore = {
   t: (key: string, vars?: Record<string, string | number>) => string;
   fmt: Formatters;
 };
+
+const CITY_AIRPORT: Record<string, string> = {
+  "new york": "JFK",
+  "newark": "EWR",
+  "san francisco": "SFO",
+  "los angeles": "LAX",
+  "chicago": "ORD",
+  "boston": "BOS",
+  "seattle": "SEA",
+  "atlanta": "ATL",
+  "miami": "MIA",
+  "cancun": "CUN",
+  "cancún": "CUN",
+  "mexico city": "MEX",
+  "lima": "LIM",
+  "london": "LHR",
+  "paris": "CDG",
+  "frankfurt": "FRA",
+  "amsterdam": "AMS",
+  "madrid": "MAD",
+  "barcelona": "BCN",
+  "rome": "FCO",
+  "milan": "MXP",
+  "lisbon": "LIS",
+  "vienna": "VIE",
+  "berlin": "BER",
+  "munich": "MUC",
+  "zurich": "ZRH",
+  "stockholm": "ARN",
+  "oslo": "OSL",
+  "copenhagen": "CPH",
+  "dublin": "DUB",
+  "reykjavik": "KEF",
+  "reykjavík": "KEF",
+  "athens": "ATH",
+  "istanbul": "IST",
+  "dubai": "DXB",
+  "tel aviv": "TLV",
+  "tokyo": "HND",
+  "singapore": "SIN",
+  "bangkok": "BKK",
+  "hong kong": "HKG",
+  "shanghai": "PVG",
+  "seoul": "ICN",
+  "mumbai": "BOM",
+  "delhi": "DEL",
+  "bali": "DPS",
+  "sydney": "SYD",
+  "auckland": "AKL",
+  "cape town": "CPT",
+  "johannesburg": "JNB",
+  "dakar": "DKR",
+  "sao paulo": "GRU",
+  "rio de janeiro": "GIG",
+  "buenos aires": "EZE",
+};
+
+function cityToCode(city: string): string {
+  const key = city.trim().toLowerCase();
+  if (CITY_AIRPORT[key]) return CITY_AIRPORT[key];
+  const clean = city.replace(/[^a-zA-Z]/g, "").toUpperCase();
+  return (clean + "XXX").slice(0, 3);
+}
 
 const DemoContext = createContext<DemoStore | null>(null);
 
@@ -91,6 +165,40 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     [updateStatus],
   );
 
+  const addFlight = useCallback((input: NewFlightInput): Flight => {
+    let created!: Flight;
+    setFlights((prev) => {
+      const maxNum = prev.reduce((m, f) => {
+        const n = parseInt(f.id.replace("FL-", ""), 10);
+        return Number.isFinite(n) ? Math.max(m, n) : m;
+      }, 9000);
+      const num = maxNum + 1;
+      const partySize = 1 + Math.floor(Math.random() * 3);
+      const flightCostUsd = (800 + Math.floor(Math.random() * 130) * 20);
+      const hotelCostUsd = (1500 + Math.floor(Math.random() * 150) * 20);
+      created = {
+        id: `FL-${num}`,
+        bookingRef: `ATL-${num}`,
+        passengerName: input.passengerName,
+        partySize,
+        email: input.email,
+        phone: input.phone,
+        origin: cityToCode(input.originCity),
+        originCity: input.originCity,
+        destination: cityToCode(input.destinationCity),
+        destinationCity: input.destinationCity,
+        departureDate: input.departureDate,
+        returnDate: input.returnDate,
+        flightCostUsd,
+        hotelCostUsd,
+        agentId: ACTIVE_AGENT_ID,
+        status: "open",
+      };
+      return [...prev, created];
+    });
+    return created;
+  }, []);
+
   const t = useCallback(
     (key: string, vars?: Record<string, string | number>) =>
       tr(DICTIONARIES[lang], key, vars),
@@ -117,6 +225,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
       setView,
       markUpsold,
       markDeclined,
+      addFlight,
       pushToast,
       toasts,
       dismissToast,
@@ -125,7 +234,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
       t,
       fmt,
     }),
-    [flights, view, markUpsold, markDeclined, pushToast, toasts, dismissToast, lang, t, fmt],
+    [flights, view, markUpsold, markDeclined, addFlight, pushToast, toasts, dismissToast, lang, t, fmt],
   );
 
   return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>;
