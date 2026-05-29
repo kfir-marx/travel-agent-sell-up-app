@@ -1,13 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import { formatPercent, formatUsd } from "../lib/format";
 import { useAgencyMetrics, useDemo } from "../lib/store";
 import CountUp from "./CountUp";
 
 export default function AgencyView() {
   const metrics = useAgencyMetrics();
-  const { flights, agents } = useDemo();
+  const { flights, agents, t, fmt } = useDemo();
 
   const perAgent = useMemo(() => {
     return agents
@@ -35,74 +34,79 @@ export default function AgencyView() {
 
   const statusMix = useMemo(
     () => [
-      { label: "Upsold", count: metrics.upsoldCount, tone: "bg-emerald-500" },
-      { label: "Open", count: metrics.openCount, tone: "bg-amber-400" },
-      { label: "Declined", count: metrics.declinedCount, tone: "bg-slate-400" },
-      { label: "Hotel on file", count: metrics.pastCount, tone: "bg-slate-300" },
+      { key: "upsold", label: t("agency.mix.upsold"), count: metrics.upsoldCount, tone: "bg-emerald-500" },
+      { key: "open", label: t("agency.mix.open"), count: metrics.openCount, tone: "bg-amber-400" },
+      { key: "declined", label: t("agency.mix.declined"), count: metrics.declinedCount, tone: "bg-slate-400" },
+      { key: "past", label: t("agency.mix.past"), count: metrics.pastCount, tone: "bg-slate-300" },
     ],
-    [metrics],
+    [metrics, t],
   );
   const statusTotal = statusMix.reduce((s, e) => s + e.count, 0) || 1;
+
+  const potentialDelta =
+    metrics.openCount === 1
+      ? t("agency.metric.potentialProfit.delta.one")
+      : t("agency.metric.potentialProfit.delta.other", { count: metrics.openCount });
 
   return (
     <>
       <section className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-            Agency Performance
+            {t("agency.eyebrow")}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">
-            Hotel upsell analytics
+            {t("agency.title")}
           </h1>
-          <p className="mt-1.5 text-sm text-slate-500">
-            Real-time view of conversion, commission earned, and commission still on the
-            table across all agents.
-          </p>
+          <p className="mt-1.5 text-sm text-slate-500">{t("agency.subtitle")}</p>
         </div>
         <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
           </span>
-          <span className="text-xs font-medium text-slate-700">Live</span>
+          <span className="text-xs font-medium text-slate-700">{t("agency.live")}</span>
         </div>
       </section>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         <MetricCard
-          eyebrow="Closing rate"
+          eyebrow={t("agency.metric.closingRate")}
           value={
-            <CountUp value={metrics.closingRate} format={(n) => formatPercent(n, 1)} />
+            <CountUp value={metrics.closingRate} format={(n) => fmt.percent(n, 1)} />
           }
-          delta={`${metrics.upsoldCount} of ${metrics.totalFlights} bookings converted`}
+          delta={t("agency.metric.closingRate.delta", {
+            upsold: metrics.upsoldCount,
+            total: metrics.totalFlights,
+          })}
           accent="indigo"
           progress={metrics.closingRate}
         />
         <MetricCard
-          eyebrow="Net profit (commission)"
+          eyebrow={t("agency.metric.netProfit")}
           value={
             <CountUp
               value={metrics.netProfit}
-              format={(n) => formatUsd(n, { decimals: true })}
+              format={(n) => fmt.usd(n, { decimals: true })}
             />
           }
-          delta={`1% of ${formatUsd(metrics.totalHotelRevenue)} in booked hotel value`}
+          delta={t("agency.metric.netProfit.delta", {
+            revenue: fmt.usd(metrics.totalHotelRevenue),
+          })}
           accent="emerald"
           progress={
             metrics.netProfit / Math.max(1, metrics.netProfit + metrics.potentialProfit)
           }
         />
         <MetricCard
-          eyebrow="Potential profit"
+          eyebrow={t("agency.metric.potentialProfit")}
           value={
             <CountUp
               value={metrics.potentialProfit}
-              format={(n) => formatUsd(n, { decimals: true })}
+              format={(n) => fmt.usd(n, { decimals: true })}
             />
           }
-          delta={`${metrics.openCount} open ${
-            metrics.openCount === 1 ? "booking" : "bookings"
-          } pending outreach`}
+          delta={potentialDelta}
           accent="amber"
           progress={
             metrics.potentialProfit /
@@ -116,13 +120,15 @@ export default function AgencyView() {
           <div className="flex items-end justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                Agent leaderboard
+                {t("agency.leaderboard.eyebrow")}
               </p>
               <h2 className="mt-1 text-base font-semibold text-slate-900">
-                Commission earned this quarter
+                {t("agency.leaderboard.title")}
               </h2>
             </div>
-            <span className="text-xs text-slate-500">{flights.length} bookings tracked</span>
+            <span className="text-xs text-slate-500">
+              {t("agency.leaderboard.tracked", { count: flights.length })}
+            </span>
           </div>
 
           <div className="mt-5 divide-y divide-slate-100">
@@ -144,21 +150,25 @@ export default function AgencyView() {
                     <p className="text-sm font-semibold text-slate-900 tabular-nums">
                       <CountUp
                         value={row.revenue}
-                        format={(n) => formatUsd(n, { decimals: true })}
+                        format={(n) => fmt.usd(n, { decimals: true })}
                       />
                     </p>
                   </div>
                   <div className="mt-2 flex items-center gap-3">
                     <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
                       <div
-                        className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-[width] duration-700 ease-out"
+                        className="absolute inset-y-0 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-[width] duration-700 ease-out"
                         style={{
+                          insetInlineStart: 0,
                           width: `${Math.min(100, (row.revenue / Math.max(1, perAgent[0].revenue)) * 100)}%`,
                         }}
                       />
                     </div>
-                    <p className="w-28 text-right text-[11px] text-slate-500">
-                      {row.upsold} sold · {formatPercent(row.rate, 0)} close
+                    <p className="w-28 text-end text-[11px] text-slate-500">
+                      {t("agency.leaderboard.row", {
+                        upsold: row.upsold,
+                        rate: fmt.percent(row.rate, 0),
+                      })}
                     </p>
                   </div>
                 </div>
@@ -169,15 +179,17 @@ export default function AgencyView() {
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Pipeline mix
+            {t("agency.mix.eyebrow")}
           </p>
-          <h2 className="mt-1 text-base font-semibold text-slate-900">Booking status</h2>
+          <h2 className="mt-1 text-base font-semibold text-slate-900">
+            {t("agency.mix.title")}
+          </h2>
 
           <div className="mt-5 h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
             <div className="flex h-full w-full">
               {statusMix.map((s) => (
                 <div
-                  key={s.label}
+                  key={s.key}
                   className={`${s.tone} transition-[flex-grow] duration-700 ease-out`}
                   style={{ flexGrow: s.count / statusTotal }}
                 />
@@ -187,25 +199,23 @@ export default function AgencyView() {
 
           <ul className="mt-5 space-y-3.5">
             {statusMix.map((s) => (
-              <li key={s.label} className="flex items-center gap-3">
+              <li key={s.key} className="flex items-center gap-3">
                 <span className={`h-2.5 w-2.5 flex-none rounded-full ${s.tone}`} />
                 <span className="flex-1 text-sm text-slate-700">{s.label}</span>
                 <span className="text-sm font-semibold tabular-nums text-slate-900">
-                  <CountUp value={s.count} format={(n) => Math.round(n).toString()} />
+                  <CountUp value={s.count} format={(n) => fmt.number(n)} />
                 </span>
-                <span className="w-14 text-right text-xs text-slate-500 tabular-nums">
-                  {formatPercent(s.count / statusTotal, 0)}
+                <span className="w-14 text-end text-xs text-slate-500 tabular-nums">
+                  {fmt.percent(s.count / statusTotal, 0)}
                 </span>
               </li>
             ))}
           </ul>
 
           <div className="mt-6 rounded-xl border border-dashed border-slate-200 bg-slate-50/60 p-4 text-xs leading-relaxed text-slate-600">
-            Closing every remaining open booking would add{" "}
-            <span className="font-semibold text-slate-900">
-              {formatUsd(metrics.potentialProfit, { decimals: true })}
-            </span>{" "}
-            to this quarter&apos;s commission.
+            {t("agency.mix.footer", {
+              amount: fmt.usd(metrics.potentialProfit, { decimals: true }),
+            })}
           </div>
         </section>
       </div>
@@ -250,7 +260,8 @@ function MetricCard({
     >
       <div
         aria-hidden
-        className={`pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-gradient-to-br ${accentMap.glow} to-transparent blur-2xl`}
+        className={`pointer-events-none absolute -top-16 h-40 w-40 rounded-full bg-gradient-to-br ${accentMap.glow} to-transparent blur-2xl`}
+        style={{ insetInlineEnd: "-4rem" }}
       />
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
         {eyebrow}

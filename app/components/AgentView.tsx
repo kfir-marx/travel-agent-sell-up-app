@@ -2,13 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { useDemo } from "../lib/store";
-import { formatUsd } from "../lib/format";
 import type { Flight } from "../lib/types";
 import FlightCard from "./FlightCard";
 import FlightDetailModal from "./FlightDetailModal";
 
 export default function AgentView() {
-  const { flights, activeAgentId } = useDemo();
+  const { flights, activeAgentId, t, fmt } = useDemo();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const myFlights = useMemo(
@@ -38,34 +37,38 @@ export default function AgentView() {
     [myFlights, selectedId],
   );
 
+  const subtitle =
+    open.length === 1
+      ? t("agent.subtitle.one", { commission: fmt.usd(potentialUsd * 0.01, { decimals: true }) })
+      : t("agent.subtitle.other", {
+          count: open.length,
+          commission: fmt.usd(potentialUsd * 0.01, { decimals: true }),
+        });
+
   return (
     <>
       <section className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-            My Bookings
+            {t("agent.eyebrow")}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">
-            Upcoming flights
+            {t("agent.title")}
           </h1>
-          <p className="mt-1.5 text-sm text-slate-500">
-            {open.length} {open.length === 1 ? "booking is" : "bookings are"} open for a
-            hotel upsell — about {formatUsd(potentialUsd * 0.01, { decimals: true })} in
-            commission on the line.
-          </p>
+          <p className="mt-1.5 text-sm text-slate-500">{subtitle}</p>
         </div>
 
         <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm">
-          <Pill tone="amber" count={open.length} label="Upsell available" />
-          <Pill tone="slate" count={handled.length} label="Handled" />
+          <Pill tone="amber" count={open.length} label={t("agent.pill.upsellAvailable")} />
+          <Pill tone="slate" count={handled.length} label={t("agent.pill.handled")} />
         </div>
       </section>
 
       {sortedOpen.length > 0 && (
         <SectionHeader
-          eyebrow="Open"
-          title="Ready to upsell"
-          hint="Click a card to send the WhatsApp offer."
+          eyebrow={t("agent.section.open.eyebrow")}
+          title={t("agent.section.open.title")}
+          hint={t("agent.section.open.hint")}
         />
       )}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -83,9 +86,9 @@ export default function AgentView() {
         <>
           <div className="mt-12">
             <SectionHeader
-              eyebrow="Closed"
-              title="Already handled"
-              hint="These bookings are no longer eligible for upsell."
+              eyebrow={t("agent.section.closed.eyebrow")}
+              title={t("agent.section.closed.title")}
+              hint={t("agent.section.closed.hint")}
             />
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">

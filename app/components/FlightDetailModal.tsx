@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { sendUpsellWhatsApp } from "../actions";
-import { formatDate, formatUsd, nightsBetween } from "../lib/format";
+import { nightsBetween } from "../lib/format";
 import { useDemo } from "../lib/store";
 import type { Flight } from "../lib/types";
 
@@ -11,8 +11,11 @@ type Props = {
   onClose: () => void;
 };
 
+type T = (key: string, vars?: Record<string, string | number>) => string;
+type Fmt = ReturnType<typeof useDemo>["fmt"];
+
 export default function FlightDetailModal({ flight, onClose }: Props) {
-  const { markUpsold, markDeclined, pushToast } = useDemo();
+  const { markUpsold, markDeclined, pushToast, t, fmt, lang } = useDemo();
   const [mounted, setMounted] = useState(false);
   const [working, setWorking] = useState<"yes" | "no" | null>(null);
   // Keep last-known flight so the panel can animate out gracefully after `flight` is cleared.
@@ -30,7 +33,6 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
         window.clearTimeout(closeTimerRef.current);
         closeTimerRef.current = null;
       }
-      // double-rAF for reliable enter transition on first paint
       requestAnimationFrame(() => requestAnimationFrame(() => setMounted(true)));
     } else if (stickyFlight) {
       requestAnimationFrame(() => setMounted(false));
@@ -62,19 +64,19 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
 
   const commission = f.hotelCostUsd * 0.01;
   const nights = nightsBetween(f.departureDate, f.returnDate);
+  const firstName = f.passengerName.split(/[&,]/)[0].trim();
+  const isRtl = lang === "he";
 
   async function handleYes() {
     if (working) return;
     setWorking("yes");
-    // Optimistic state change + close happens immediately for the demo wow factor.
     markUpsold(f.id);
     pushToast({
       tone: "success",
-      title: "WhatsApp sent",
-      body: `Hotel offer delivered to ${f.passengerName.split(/[&,]/)[0].trim()} at ${f.email}.`,
+      title: t("toast.upsold.title"),
+      body: t("toast.upsold.body", { name: firstName, email: f.email }),
     });
     onClose();
-    // Fire-and-forget Twilio call so a slow network doesn't stall the UI.
     void sendUpsellWhatsApp({
       flightId: f.id,
       bookingRef: f.bookingRef,
@@ -88,7 +90,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
       if (!res.ok) {
         pushToast({
           tone: "error",
-          title: "WhatsApp delivery failed",
+          title: t("toast.error.title"),
           body: res.error,
         });
       }
@@ -101,11 +103,20 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
     markDeclined(f.id);
     pushToast({
       tone: "info",
-      title: "Upsell skipped",
-      body: `${f.bookingRef} marked as not eligible for outreach.`,
+      title: t("toast.declined.title"),
+      body: t("toast.declined.body", { ref: f.bookingRef }),
     });
     onClose();
   }
+
+  const travelersLabel =
+    f.partySize === 1
+      ? t("modal.travelers.one", { email: f.email })
+      : t("modal.travelers.other", { count: f.partySize, email: f.email });
+
+  // The panel anchors to the inline-end (right in LTR, left in RTL) and slides in from
+  // that edge. We compute the off-screen translate based on text direction.
+  const offscreenTransform = isRtl ? "translateX(-100%)" : "translateX(100%)";
 
   return (
     <div
@@ -121,27 +132,27 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
       <aside
         role="dialog"
         aria-modal="true"
-        aria-label={`Booking ${f.bookingRef}`}
+        aria-label={t("modal.bookingRef", { ref: f.bookingRef })}
         onClick={(e) => e.stopPropagation()}
-        className={`absolute top-0 right-0 flex h-full w-full max-w-xl flex-col bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          mounted ? "translate-x-0" : "translate-x-full"
-        }`}
+        className="absolute top-0 flex h-full w-full max-w-xl flex-col bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          insetInlineEnd: 0,
+          transform: mounted ? "translateX(0)" : offscreenTransform,
+        }}
       >
         <header className="flex items-start justify-between gap-4 border-b border-slate-100 px-7 py-6">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400">
-              Booking {f.bookingRef}
+              {t("modal.bookingRef", { ref: f.bookingRef })}
             </p>
             <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-slate-900">
               {f.passengerName}
             </h2>
-            <p className="mt-0.5 text-xs text-slate-500">
-              {f.partySize} {f.partySize === 1 ? "traveler" : "travelers"} · {f.email}
-            </p>
+            <p className="mt-0.5 text-xs text-slate-500">{travelersLabel}</p>
           </div>
           <button
             type="button"
-            aria-label="Close"
+            aria-label={t("modal.aria.close")}
             onClick={onClose}
             className="rounded-full p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
           >
@@ -154,31 +165,40 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
         <div className="flex-1 overflow-y-auto px-7 py-6">
           <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-              Itinerary
+              {t("modal.itinerary")}
             </p>
             <div className="mt-4 flex items-center justify-between gap-4">
-              <RouteEnd code={f.origin} city={f.originCity} date={f.departureDate} />
+              <RouteEnd
+                code={f.origin}
+                city={f.originCity}
+                date={fmt.date(f.departureDate)}
+              />
               <div className="flex flex-1 items-center">
                 <span className="h-px flex-1 bg-slate-300" />
                 <span className="mx-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm ring-1 ring-slate-200">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 rtl:-scale-x-100">
                     <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V18l-2 1.5V21l3.5-1L15 21v-1.5L13 18v-4.5L21 16z" />
                   </svg>
                 </span>
                 <span className="h-px flex-1 bg-slate-300" />
               </div>
-              <RouteEnd code={f.destination} city={f.destinationCity} date={f.returnDate} align="right" />
+              <RouteEnd
+                code={f.destination}
+                city={f.destinationCity}
+                date={fmt.date(f.returnDate)}
+                align="end"
+              />
             </div>
             <div className="mt-5 grid grid-cols-3 gap-3 border-t border-slate-200 pt-4">
-              <SmallStat label="Nights" value={`${nights}`} />
-              <SmallStat label="Flight cost" value={formatUsd(f.flightCostUsd)} />
-              <SmallStat label="Hotel value" value={formatUsd(f.hotelCostUsd)} />
+              <SmallStat label={t("modal.nights")} value={fmt.number(nights)} />
+              <SmallStat label={t("modal.flightCost")} value={fmt.usd(f.flightCostUsd)} />
+              <SmallStat label={t("modal.hotelValue")} value={fmt.usd(f.hotelCostUsd)} />
             </div>
           </section>
 
           <section className="mt-5 grid grid-cols-2 gap-3">
-            <ContactCard label="Email" value={f.email} icon="mail" />
-            <ContactCard label="Phone" value={f.phone} icon="phone" />
+            <ContactCard label={t("modal.email")} value={f.email} icon="mail" />
+            <ContactCard label={t("modal.phone")} value={f.phone} icon="phone" />
           </section>
 
           {f.status === "open" ? (
@@ -191,25 +211,22 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
                 </span>
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-800">
-                    Hotel upsell
+                    {t("modal.upsell.eyebrow")}
                   </p>
                   <h3 className="mt-1 text-base font-semibold leading-snug text-slate-900">
-                    Would you like to book a hotel independently for this booking?
+                    {t("modal.upsell.title")}
                   </h3>
                   <p className="mt-1.5 text-sm text-slate-600">
-                    We&apos;ll WhatsApp {f.passengerName.split(/[&,]/)[0].trim()} a curated
-                    shortlist of 3 partner hotels at unpublished rates. Your projected
-                    commission on conversion is{" "}
-                    <span className="font-semibold text-amber-700">
-                      {formatUsd(commission, { decimals: true })}
-                    </span>
-                    .
+                    {t("modal.upsell.body", {
+                      firstName,
+                      commission: fmt.usd(commission, { decimals: true }),
+                    })}
                   </p>
                 </div>
               </div>
             </section>
           ) : (
-            <HandledStatusCard flight={f} commission={commission} />
+            <HandledStatusCard flight={f} commission={commission} t={t} fmt={fmt} />
           )}
         </div>
 
@@ -223,7 +240,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
                   disabled={!!working}
                   className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 active:scale-[0.99] disabled:opacity-60"
                 >
-                  No, skip
+                  {t("modal.btn.no")}
                 </button>
                 <button
                   type="button"
@@ -235,16 +252,21 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
                     <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
                       <path d="M20 4 9 15l-5-5" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    Yes, send WhatsApp offer
+                    {t("modal.btn.yes")}
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-y-0 -left-1/3 w-1/3 bg-white/30 blur-md transition-transform duration-700 ease-out group-hover:translate-x-[450%]"
+                    className="absolute inset-y-0 w-1/3 bg-white/30 blur-md transition-transform duration-700 ease-out"
+                    style={{
+                      insetInlineStart: "-33%",
+                      // Sweep follows reading direction.
+                      transform: "translateX(0)",
+                    }}
                   />
                 </button>
               </div>
               <p className="mt-3 text-center text-[11px] text-slate-500">
-                Sends via Twilio WhatsApp Business · receipt logged to the booking
+                {t("modal.legal")}
               </p>
             </>
           ) : (
@@ -253,7 +275,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
               onClick={onClose}
               className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 active:scale-[0.99]"
             >
-              Close
+              {t("modal.btn.close")}
             </button>
           )}
         </footer>
@@ -271,15 +293,15 @@ function RouteEnd({
   code: string;
   city: string;
   date: string;
-  align?: "left" | "right";
+  align?: "start" | "end";
 }) {
   return (
-    <div className={align === "right" ? "text-right" : "text-left"}>
+    <div className={align === "end" ? "text-end" : "text-start"}>
       <p className="text-3xl font-semibold tracking-tight text-slate-900 tabular-nums">
         {code}
       </p>
       <p className="text-[11px] uppercase tracking-wide text-slate-500">{city}</p>
-      <p className="mt-1 text-xs font-medium text-slate-600">{formatDate(date)}</p>
+      <p className="mt-1 text-xs font-medium text-slate-600">{date}</p>
     </div>
   );
 }
@@ -331,54 +353,41 @@ function ContactCard({
 function HandledStatusCard({
   flight,
   commission,
+  t,
+  fmt,
 }: {
   flight: Flight;
   commission: number;
+  t: T;
+  fmt: Fmt;
 }) {
   const variant = {
     upsold: {
       tone: "border-emerald-200 from-emerald-50 via-emerald-50/40 shadow-[0_8px_30px_-12px_rgba(16,185,129,0.35)]",
       pillBg: "bg-emerald-500/15 text-emerald-700",
       eyebrow: "text-emerald-800",
-      label: "Upsell sent",
-      title: "WhatsApp offer delivered",
-      body: (
-        <>
-          A curated hotel shortlist has been sent to{" "}
-          <span className="font-medium text-slate-900">{flight.email}</span>. Commission
-          on conversion is{" "}
-          <span className="font-semibold text-emerald-700">
-            {formatUsd(commission, { decimals: true })}
-          </span>
-          .
-        </>
-      ),
+      label: t("handled.upsold.label"),
+      title: t("handled.upsold.title"),
+      body: t("handled.upsold.body", {
+        email: flight.email,
+        commission: fmt.usd(commission, { decimals: true }),
+      }),
     },
     declined: {
       tone: "border-slate-200 from-slate-50 via-slate-50/40 shadow-none",
       pillBg: "bg-slate-200 text-slate-700",
       eyebrow: "text-slate-700",
-      label: "Skipped",
-      title: "Upsell not offered",
-      body: (
-        <>
-          The agent chose not to send a hotel offer for this booking. No customer
-          outreach was made.
-        </>
-      ),
+      label: t("handled.declined.label"),
+      title: t("handled.declined.title"),
+      body: t("handled.declined.body"),
     },
     past: {
       tone: "border-slate-200 from-slate-50 via-slate-50/40 shadow-none",
       pillBg: "bg-slate-200 text-slate-700",
       eyebrow: "text-slate-700",
-      label: "Hotel on file",
-      title: "Hotel already booked",
-      body: (
-        <>
-          This traveler already has a hotel booked through Atlas Travel for these dates.
-          No further outreach needed.
-        </>
-      ),
+      label: t("handled.past.label"),
+      title: t("handled.past.title"),
+      body: t("handled.past.body"),
     },
     open: null,
   }[flight.status];

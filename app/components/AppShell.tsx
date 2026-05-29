@@ -1,12 +1,13 @@
 "use client";
 
 import { useDemo } from "../lib/store";
+import type { Lang } from "../lib/i18n";
 import AgentView from "./AgentView";
 import AgencyView from "./AgencyView";
 import ToastStack from "./ToastStack";
 
 export default function AppShell() {
-  const { view, setView, agents, activeAgentId } = useDemo();
+  const { view, setView, agents, activeAgentId, lang, setLang, t } = useDemo();
   const me = agents.find((a) => a.id === activeAgentId)!;
 
   return (
@@ -19,20 +20,30 @@ export default function AppShell() {
             </div>
             <div>
               <p className="text-sm font-semibold tracking-tight text-slate-900">
-                Atlas Travel
+                {t("nav.brand")}
               </p>
               <p className="text-[11px] uppercase tracking-[0.14em] text-slate-500">
-                Upsell Suite
+                {t("nav.subtitle")}
               </p>
             </div>
           </div>
 
-          <ViewToggle current={view} onChange={setView} />
+          <ViewToggle
+            current={view}
+            onChange={setView}
+            labels={{ agent: t("nav.agent"), agency: t("nav.agency") }}
+          />
 
           <div className="flex items-center gap-3">
-            <div className="hidden text-right md:block">
+            <LangToggle
+              current={lang}
+              onChange={setLang}
+              ariaLabel={t("nav.lang.aria")}
+              labels={{ en: t("nav.lang.en"), he: t("nav.lang.he") }}
+            />
+            <div className="hidden text-end md:block">
               <p className="text-xs font-semibold text-slate-900">{me.name}</p>
-              <p className="text-[11px] text-slate-500">Senior Travel Agent</p>
+              <p className="text-[11px] text-slate-500">{t("nav.role")}</p>
             </div>
             <div
               className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${me.avatarTint} text-xs font-semibold text-white shadow-sm ring-2 ring-white`}
@@ -57,16 +68,20 @@ export default function AppShell() {
 function ViewToggle({
   current,
   onChange,
+  labels,
 }: {
   current: "agent" | "agency";
   onChange: (v: "agent" | "agency") => void;
+  labels: { agent: string; agency: string };
 }) {
   return (
     <div className="relative flex items-center rounded-full border border-slate-200 bg-slate-100/80 p-1 shadow-inner">
       <span
         aria-hidden
-        className="absolute top-1 bottom-1 w-[calc(50%-0.25rem)] rounded-full bg-white shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{ transform: current === "agent" ? "translateX(0)" : "translateX(100%)" }}
+        className="absolute top-1 bottom-1 w-[calc(50%-0.25rem)] rounded-full bg-white shadow-sm transition-[inset-inline-start] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          insetInlineStart: current === "agent" ? "0.25rem" : "calc(50% - 0.125rem)",
+        }}
       />
       <button
         type="button"
@@ -75,7 +90,7 @@ function ViewToggle({
           current === "agent" ? "text-slate-900" : "text-slate-500 hover:text-slate-700"
         }`}
       >
-        Agent
+        {labels.agent}
       </button>
       <button
         type="button"
@@ -84,7 +99,55 @@ function ViewToggle({
           current === "agency" ? "text-slate-900" : "text-slate-500 hover:text-slate-700"
         }`}
       >
-        Agency
+        {labels.agency}
+      </button>
+    </div>
+  );
+}
+
+function LangToggle({
+  current,
+  onChange,
+  labels,
+  ariaLabel,
+}: {
+  current: Lang;
+  onChange: (l: Lang) => void;
+  labels: { en: string; he: string };
+  ariaLabel: string;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label={ariaLabel}
+      className="relative flex items-center rounded-full border border-slate-200 bg-slate-100/80 p-1 shadow-inner"
+    >
+      <span
+        aria-hidden
+        className="absolute top-1 bottom-1 w-[calc(50%-0.25rem)] rounded-full bg-white shadow-sm transition-[inset-inline-start] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          insetInlineStart: current === "en" ? "0.25rem" : "calc(50% - 0.125rem)",
+        }}
+      />
+      <button
+        type="button"
+        onClick={() => onChange("en")}
+        aria-pressed={current === "en"}
+        className={`relative z-10 rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition ${
+          current === "en" ? "text-slate-900" : "text-slate-500 hover:text-slate-700"
+        }`}
+      >
+        {labels.en}
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange("he")}
+        aria-pressed={current === "he"}
+        className={`relative z-10 rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition ${
+          current === "he" ? "text-slate-900" : "text-slate-500 hover:text-slate-700"
+        }`}
+      >
+        {labels.he}
       </button>
     </div>
   );

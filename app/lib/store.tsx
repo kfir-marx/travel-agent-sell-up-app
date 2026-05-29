@@ -1,14 +1,37 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { ACTIVE_AGENT_ID, AGENTS, FLIGHTS, HOTEL_COMMISSION_RATE } from "./mockData";
 import type { Agent, Flight, FlightStatus, View } from "./types";
+import { DICTIONARIES, LOCALES, type Lang, tr } from "./i18n";
+import {
+  formatDate as fmtDate,
+  formatDateRange as fmtDateRange,
+  formatNumber as fmtNumber,
+  formatPercent as fmtPercent,
+  formatUsd as fmtUsd,
+} from "./format";
 
 type Toast = {
   id: number;
   title: string;
   body: string;
   tone: "success" | "info" | "error";
+};
+
+type Formatters = {
+  usd: (n: number, opts?: { decimals?: boolean }) => string;
+  date: (iso: string) => string;
+  dateRange: (start: string, end: string) => string;
+  percent: (n: number, digits?: number) => string;
+  number: (n: number) => string;
 };
 
 type DemoStore = {
@@ -22,6 +45,10 @@ type DemoStore = {
   pushToast: (toast: Omit<Toast, "id">) => void;
   toasts: Toast[];
   dismissToast: (id: number) => void;
+  lang: Lang;
+  setLang: (lang: Lang) => void;
+  t: (key: string, vars?: Record<string, string | number>) => string;
+  fmt: Formatters;
 };
 
 const DemoContext = createContext<DemoStore | null>(null);
@@ -30,6 +57,12 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const [flights, setFlights] = useState<Flight[]>(FLIGHTS);
   const [view, setView] = useState<View>("agent");
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [lang, setLang] = useState<Lang>("en");
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
+  }, [lang]);
 
   const updateStatus = useCallback((flightId: string, status: FlightStatus) => {
     setFlights((prev) =>
@@ -58,6 +91,23 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     [updateStatus],
   );
 
+  const t = useCallback(
+    (key: string, vars?: Record<string, string | number>) =>
+      tr(DICTIONARIES[lang], key, vars),
+    [lang],
+  );
+
+  const fmt = useMemo<Formatters>(() => {
+    const locale = LOCALES[lang];
+    return {
+      usd: (n, opts) => fmtUsd(n, { ...opts, locale }),
+      date: (iso) => fmtDate(iso, locale),
+      dateRange: (s, e) => fmtDateRange(s, e, locale),
+      percent: (n, digits) => fmtPercent(n, digits, locale),
+      number: (n) => fmtNumber(n, locale),
+    };
+  }, [lang]);
+
   const value = useMemo<DemoStore>(
     () => ({
       flights,
@@ -70,8 +120,12 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
       pushToast,
       toasts,
       dismissToast,
+      lang,
+      setLang,
+      t,
+      fmt,
     }),
-    [flights, view, markUpsold, markDeclined, pushToast, toasts, dismissToast],
+    [flights, view, markUpsold, markDeclined, pushToast, toasts, dismissToast, lang, t, fmt],
   );
 
   return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>;
