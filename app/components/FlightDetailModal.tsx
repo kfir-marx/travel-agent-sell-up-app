@@ -134,13 +134,13 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
         aria-modal="true"
         aria-label={t("modal.bookingRef", { ref: f.bookingRef })}
         onClick={(e) => e.stopPropagation()}
-        className="absolute top-0 flex h-full w-full max-w-xl flex-col bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="absolute top-0 flex max-h-full w-full max-w-xl flex-col overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           insetInlineEnd: 0,
           transform: mounted ? "translateX(0)" : offscreenTransform,
         }}
       >
-        <header className="flex items-start justify-between gap-4 border-b border-slate-100 px-7 py-6">
+        <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-slate-100 bg-white/95 px-7 py-6 backdrop-blur">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400">
               {t("modal.bookingRef", { ref: f.bookingRef })}
@@ -162,7 +162,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-7 py-6">
+        <div className="px-7 py-6">
           <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
               {t("modal.itinerary")}
@@ -230,7 +230,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
           )}
         </div>
 
-        <footer className="border-t border-slate-100 bg-slate-50/60 px-7 py-5">
+        <footer className="sticky bottom-0 z-10 border-t border-slate-100 bg-slate-50/85 px-7 py-5 backdrop-blur">
           {f.status === "open" ? (
             <>
               <div className="flex gap-3">
