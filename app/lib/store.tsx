@@ -52,6 +52,7 @@ type DemoStore = {
   setView: (view: View) => void;
   markUpsold: (flightId: string) => void;
   markDeclined: (flightId: string) => void;
+  markOpen: (flightId: string) => void;
   addFlight: (input: NewFlightInput) => Flight;
   pushToast: (toast: Omit<Toast, "id">) => void;
   toasts: Toast[];
@@ -164,6 +165,10 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     (flightId: string) => updateStatus(flightId, "declined"),
     [updateStatus],
   );
+  const markOpen = useCallback(
+    (flightId: string) => updateStatus(flightId, "open"),
+    [updateStatus],
+  );
 
   const addFlight = useCallback((input: NewFlightInput): Flight => {
     let created!: Flight;
@@ -225,6 +230,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
       setView,
       markUpsold,
       markDeclined,
+      markOpen,
       addFlight,
       pushToast,
       toasts,
@@ -234,7 +240,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
       t,
       fmt,
     }),
-    [flights, view, markUpsold, markDeclined, addFlight, pushToast, toasts, dismissToast, lang, t, fmt],
+    [flights, view, markUpsold, markDeclined, markOpen, addFlight, pushToast, toasts, dismissToast, lang, t, fmt],
   );
 
   return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>;

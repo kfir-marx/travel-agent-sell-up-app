@@ -61,6 +61,7 @@ const EN: Dict = {
   "modal.btn.no": "No, skip",
   "modal.btn.yes": "Yes, send WhatsApp offer",
   "modal.btn.close": "Close",
+  "modal.btn.restore": "Restore upsell",
   "modal.legal": "Sends via Twilio WhatsApp Business · receipt logged to the booking",
   "modal.aria.close": "Close",
 
@@ -80,6 +81,8 @@ const EN: Dict = {
   "toast.upsold.body": "Hotel offer delivered to {name} at {email}.",
   "toast.declined.title": "Upsell skipped",
   "toast.declined.body": "{ref} marked as not eligible for outreach.",
+  "toast.restored.title": "Upsell restored",
+  "toast.restored.body": "{ref} is back in the open pipeline.",
   "toast.error.title": "WhatsApp delivery failed",
   "toast.aria.dismiss": "Dismiss",
 
@@ -217,6 +220,7 @@ const HE: Dict = {
   "modal.btn.no": "לא, דילוג",
   "modal.btn.yes": "כן, שליחת הצעה בוואטסאפ",
   "modal.btn.close": "סגירה",
+  "modal.btn.restore": "החזרת המכירה",
   "modal.legal": "נשלח דרך Twilio WhatsApp Business · האישור נרשם בהזמנה",
   "modal.aria.close": "סגירה",
 
@@ -236,6 +240,8 @@ const HE: Dict = {
   "toast.upsold.body": "הצעת מלון נמסרה ל{name} בכתובת {email}.",
   "toast.declined.title": "המכירה דולגה",
   "toast.declined.body": "{ref} סומנה כלא זמינה לפנייה.",
+  "toast.restored.title": "המכירה הוחזרה",
+  "toast.restored.body": "{ref} חזרה לצבר הפתוח.",
   "toast.error.title": "שליחת הוואטסאפ נכשלה",
   "toast.aria.dismiss": "סגירה",
 

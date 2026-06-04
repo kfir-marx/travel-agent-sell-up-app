@@ -15,9 +15,9 @@ type T = (key: string, vars?: Record<string, string | number>) => string;
 type Fmt = ReturnType<typeof useDemo>["fmt"];
 
 export default function FlightDetailModal({ flight, onClose }: Props) {
-  const { markUpsold, markDeclined, pushToast, t, fmt, lang } = useDemo();
+  const { markUpsold, markDeclined, markOpen, pushToast, t, fmt, lang } = useDemo();
   const [mounted, setMounted] = useState(false);
-  const [working, setWorking] = useState<"yes" | "no" | null>(null);
+  const [working, setWorking] = useState<"yes" | "no" | "restore" | null>(null);
   // Keep last-known flight so the panel can animate out gracefully after `flight` is cleared.
   const [stickyFlight, setStickyFlight] = useState<Flight | null>(flight);
   const [trackedFlight, setTrackedFlight] = useState<Flight | null>(flight);
@@ -105,6 +105,18 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
       tone: "info",
       title: t("toast.declined.title"),
       body: t("toast.declined.body", { ref: f.bookingRef }),
+    });
+    onClose();
+  }
+
+  function handleRestore() {
+    if (working) return;
+    setWorking("restore");
+    markOpen(f.id);
+    pushToast({
+      tone: "info",
+      title: t("toast.restored.title"),
+      body: t("toast.restored.body", { ref: f.bookingRef }),
     });
     onClose();
   }
@@ -269,6 +281,39 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
                 {t("modal.legal")}
               </p>
             </>
+          ) : f.status === "declined" ? (
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={!!working}
+                className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 active:scale-[0.99] disabled:opacity-60"
+              >
+                {t("modal.btn.close")}
+              </button>
+              <button
+                type="button"
+                onClick={handleRestore}
+                disabled={!!working}
+                className="flex-[1.6] overflow-hidden rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 px-4 py-3 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(15,23,42,0.55)] transition hover:from-slate-800 hover:to-slate-600 active:scale-[0.99] disabled:opacity-70"
+              >
+                <span className="relative inline-flex items-center justify-center gap-2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4 rtl:-scale-x-100"
+                  >
+                    <path d="M9 14 4 9l5-5" />
+                    <path d="M4 9h10a6 6 0 0 1 0 12h-3" />
+                  </svg>
+                  {t("modal.btn.restore")}
+                </span>
+              </button>
+            </div>
           ) : (
             <button
               type="button"
