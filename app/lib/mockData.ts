@@ -7,28 +7,28 @@ export const AGENTS: Agent[] = [
     id: "agent-sarah",
     name: "Sarah Chen",
     initials: "SC",
-    email: "sarah.chen@atlastravel.com",
+    email: "sarah.chen@tapy.com",
     avatarTint: "from-indigo-500 to-violet-500",
   },
   {
     id: "agent-marco",
     name: "Marco Albini",
     initials: "MA",
-    email: "marco.albini@atlastravel.com",
+    email: "marco.albini@tapy.com",
     avatarTint: "from-amber-500 to-orange-500",
   },
   {
     id: "agent-priya",
     name: "Priya Raman",
     initials: "PR",
-    email: "priya.raman@atlastravel.com",
+    email: "priya.raman@tapy.com",
     avatarTint: "from-emerald-500 to-teal-500",
   },
   {
     id: "agent-jonas",
     name: "Jonas Weber",
     initials: "JW",
-    email: "jonas.weber@atlastravel.com",
+    email: "jonas.weber@tapy.com",
     avatarTint: "from-sky-500 to-cyan-500",
   },
 ];
@@ -39,7 +39,7 @@ export const ACTIVE_AGENT_ID = "agent-sarah";
 export const FLIGHTS: Flight[] = [
   {
     id: "FL-9421",
-    bookingRef: "ATL-9421",
+    bookingRef: "TPY-9421",
     passengerName: "Eleanor & James Whitfield",
     partySize: 2,
     email: "eleanor.whitfield@gmail.com",
@@ -57,7 +57,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9438",
-    bookingRef: "ATL-9438",
+    bookingRef: "TPY-9438",
     passengerName: "Yuki Tanaka",
     partySize: 1,
     email: "yuki.tanaka@hey.com",
@@ -75,7 +75,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9445",
-    bookingRef: "ATL-9445",
+    bookingRef: "TPY-9445",
     passengerName: "Amelia & Ravi Kapoor",
     partySize: 2,
     email: "amelia.kapoor@outlook.com",
@@ -93,7 +93,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9452",
-    bookingRef: "ATL-9452",
+    bookingRef: "TPY-9452",
     passengerName: "Devon Park",
     partySize: 1,
     email: "devon.park@protonmail.com",
@@ -111,7 +111,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9460",
-    bookingRef: "ATL-9460",
+    bookingRef: "TPY-9460",
     passengerName: "The Okonkwo Family",
     partySize: 4,
     email: "n.okonkwo@gmail.com",
@@ -129,7 +129,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9471",
-    bookingRef: "ATL-9471",
+    bookingRef: "TPY-9471",
     passengerName: "Hannah Lindqvist",
     partySize: 1,
     email: "hannah.lindqvist@icloud.com",
@@ -147,7 +147,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9382",
-    bookingRef: "ATL-9382",
+    bookingRef: "TPY-9382",
     passengerName: "Carla Mendoza",
     partySize: 2,
     email: "carla.mendoza@gmail.com",
@@ -165,7 +165,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9396",
-    bookingRef: "ATL-9396",
+    bookingRef: "TPY-9396",
     passengerName: "Theodore Brennan",
     partySize: 1,
     email: "ted.brennan@hotmail.com",
@@ -183,7 +183,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9404",
-    bookingRef: "ATL-9404",
+    bookingRef: "TPY-9404",
     passengerName: "Mei Lin & Anthony Hoang",
     partySize: 2,
     email: "mei.hoang@gmail.com",
@@ -201,7 +201,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9412",
-    bookingRef: "ATL-9412",
+    bookingRef: "TPY-9412",
     passengerName: "Ben Gold",
     partySize: 1,
     email: "ben.gold@gmail.com",
@@ -219,7 +219,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9418",
-    bookingRef: "ATL-9418",
+    bookingRef: "TPY-9418",
     passengerName: "Sofia Romano",
     partySize: 3,
     email: "sofia.romano@gmail.com",
@@ -237,7 +237,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9358",
-    bookingRef: "ATL-9358",
+    bookingRef: "TPY-9358",
     passengerName: "Olivia & Daniel Park",
     partySize: 2,
     email: "olivia.park@gmail.com",
@@ -257,7 +257,7 @@ export const FLIGHTS: Flight[] = [
   // Other agents' flights — used by the agency leaderboard.
   {
     id: "FL-9501",
-    bookingRef: "ATL-9501",
+    bookingRef: "TPY-9501",
     passengerName: "Hector Alvarez",
     partySize: 2,
     email: "h.alvarez@gmail.com",
@@ -275,7 +275,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9508",
-    bookingRef: "ATL-9508",
+    bookingRef: "TPY-9508",
     passengerName: "Imani Williams",
     partySize: 1,
     email: "imani.w@gmail.com",
@@ -293,7 +293,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9514",
-    bookingRef: "ATL-9514",
+    bookingRef: "TPY-9514",
     passengerName: "Liam Bauer",
     partySize: 2,
     email: "liam.bauer@gmail.com",
@@ -311,7 +311,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9519",
-    bookingRef: "ATL-9519",
+    bookingRef: "TPY-9519",
     passengerName: "Saanvi Kumar",
     partySize: 2,
     email: "saanvi.k@gmail.com",
@@ -329,7 +329,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9526",
-    bookingRef: "ATL-9526",
+    bookingRef: "TPY-9526",
     passengerName: "Andrea Bianchi",
     partySize: 1,
     email: "andrea.b@gmail.com",
@@ -347,7 +347,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9530",
-    bookingRef: "ATL-9530",
+    bookingRef: "TPY-9530",
     passengerName: "Greta Nilsen",
     partySize: 2,
     email: "greta.nilsen@gmail.com",
@@ -365,7 +365,7 @@ export const FLIGHTS: Flight[] = [
   },
   {
     id: "FL-9537",
-    bookingRef: "ATL-9537",
+    bookingRef: "TPY-9537",
     passengerName: "Felix Carter",
     partySize: 1,
     email: "felix.carter@gmail.com",

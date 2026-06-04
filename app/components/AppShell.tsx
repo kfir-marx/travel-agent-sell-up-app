@@ -4,6 +4,7 @@ import { useDemo } from "../lib/store";
 import type { Lang } from "../lib/i18n";
 import AgentView from "./AgentView";
 import AgencyView from "./AgencyView";
+import ChatBot from "./ChatBot";
 import ToastStack from "./ToastStack";
 
 export default function AppShell() {
@@ -16,7 +17,7 @@ export default function AppShell() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3.5">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-slate-900 to-slate-700 text-sm font-bold text-white shadow-sm">
-              A
+              T
             </div>
             <div>
               <p className="text-sm font-semibold tracking-tight text-slate-900">
@@ -61,6 +62,7 @@ export default function AppShell() {
       </main>
 
       <ToastStack />
+      <ChatBot />
     </div>
   );
 }

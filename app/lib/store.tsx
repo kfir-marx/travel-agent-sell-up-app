@@ -178,7 +178,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
       const hotelCostUsd = (1500 + Math.floor(Math.random() * 150) * 20);
       created = {
         id: `FL-${num}`,
-        bookingRef: `ATL-${num}`,
+        bookingRef: `TPY-${num}`,
         passengerName: input.passengerName,
         partySize,
         email: input.email,

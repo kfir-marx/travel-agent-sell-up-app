@@ -17,7 +17,7 @@ export type UpsellResult =
 
 const TWILIO_ACCOUNT_SID = "AC0fda4ccfc5b7b6b642edfa4b6e8b9804";
 const TWILIO_FROM = "whatsapp:+14155238886";
-const LANDING_PAGE_BASE = "https://atlas-travel.example.com/hotels";
+const LANDING_PAGE_BASE = "https://tapy.example.com/hotels";
 
 export async function sendUpsellWhatsApp(input: UpsellInput): Promise<UpsellResult> {
   const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -34,7 +34,7 @@ export async function sendUpsellWhatsApp(input: UpsellInput): Promise<UpsellResu
   const landingUrl = `https://app.letstay.co.il/results?place_id=ChIJOwg_06VPwokRYv534QaPC8g&check_in=260530&check_out=260621&guests=2&rooms=1&private_travel=true&utm_source=letstay`;
   const messageBody =
     `היי ${input.passengerName.split(/[&,]/)[0].trim()}! ✈️\n\n` +
-    `הנסיעה שלך עם Atlas Travel ל-${input.destinationCity} (${input.departureDate} - ${input.returnDate}) אושרה.\n\n` +
+    `הנסיעה שלך עם Tapy ל-${input.destinationCity} (${input.departureDate} - ${input.returnDate}) אושרה.\n\n` +
     `מצאנו עבורך 3 מלונות במחירים בלעדיים לתאריכים שלך. ` +
     `ניתן לשריין כל אחד מהם בלחיצה אחת — ללא חיוב עד הצ'ק-אין:\n\n` +
     `👉 ${landingUrl}\n\n` +

@@ -9,7 +9,7 @@ export const LOCALES: Record<Lang, string> = {
 
 const EN: Dict = {
   // nav / shell
-  "nav.brand": "Atlas Travel",
+  "nav.brand": "Tapy",
   "nav.subtitle": "Upsell Suite",
   "nav.agent": "Agent",
   "nav.agency": "Agency",
@@ -39,7 +39,7 @@ const EN: Dict = {
   "card.view": "View",
   "card.help.upsold": "WhatsApp offer sent — earning commission on conversion.",
   "card.help.declined": "Agent skipped this upsell.",
-  "card.help.past": "Hotel already booked through Atlas Travel.",
+  "card.help.past": "Hotel already booked through Tapy.",
   "card.status.open": "Upsell available",
   "card.status.upsold": "Upsell sent",
   "card.status.declined": "Declined",
@@ -73,7 +73,7 @@ const EN: Dict = {
   "handled.declined.body": "The agent chose not to send a hotel offer for this booking. No customer outreach was made.",
   "handled.past.label": "Hotel on file",
   "handled.past.title": "Hotel already booked",
-  "handled.past.body": "This traveler already has a hotel booked through Atlas Travel for these dates. No further outreach needed.",
+  "handled.past.body": "This traveler already has a hotel booked through Tapy for these dates. No further outreach needed.",
 
   // toasts
   "toast.upsold.title": "WhatsApp sent",
@@ -129,11 +129,43 @@ const EN: Dict = {
   "newFlight.aria.close": "Close",
   "newFlight.toast.title": "Booking added",
   "newFlight.toast.body": "{name} · {origin} → {destination}",
+
+  // chatbot
+  "chat.btn.aria": "Open Tapy Copilot",
+  "chat.title": "Tapy Copilot",
+  "chat.subtitle": "Ask about your live metrics",
+  "chat.greeting": "Hi! I can answer questions about your closing rate, agent performance, and what's still open in the pipeline. What would you like to know?",
+  "chat.placeholder": "Ask about closing rate, an agent, or the open pipeline…",
+  "chat.send": "Send",
+  "chat.send.aria": "Send message",
+  "chat.close.aria": "Close chat",
+  "chat.thinking": "Thinking…",
+  "chat.error": "Couldn't reach the assistant. Try again in a moment.",
+  "chat.suggest.closing": "What's our closing rate?",
+  "chat.suggest.top": "Who's the top agent this quarter?",
+  "chat.suggest.left": "How much commission is still on the table?",
+
+  // tooltips (agency view)
+  "tip.aria": "More info",
+  "tip.closingRate.title": "Closing rate",
+  "tip.closingRate.body": "Share of all tracked flights where the agent converted the hotel upsell. Formula: upsold ÷ total flights.",
+  "tip.netProfit.title": "Net profit (commission)",
+  "tip.netProfit.body": "Commission already earned on upsold bookings. Formula: 1% × Σ hotel value of upsold flights.",
+  "tip.potentialProfit.title": "Potential profit",
+  "tip.potentialProfit.body": "Commission still on the table from un-pitched bookings. Formula: 1% × Σ hotel value of open flights.",
+  "tip.leaderboard.title": "Agent leaderboard",
+  "tip.leaderboard.body": "Bar length = this agent's commission relative to the top performer. \"{example}\" means {upsold} hotels sold at a {rate} close rate across handled bookings.",
+  "tip.mix.title": "Pipeline mix",
+  "tip.mix.body": "Distribution of every tracked booking across the four statuses below. The bar widths are proportional to the count of each status.",
+  "tip.mix.upsold": "Upsold — hotel offer was sent and the booking converted (counted toward commission).",
+  "tip.mix.open": "Open — flight booked, hotel upsell still pending the agent's outreach.",
+  "tip.mix.declined": "Declined — agent skipped the upsell. Counts toward closing rate but earns no commission.",
+  "tip.mix.past": "Hotel on file — the traveler already had a hotel for these dates, so no outreach was needed.",
 };
 
 const HE: Dict = {
   // nav / shell
-  "nav.brand": "אטלס טראוול",
+  "nav.brand": "טאפי",
   "nav.subtitle": "מערכת מכירות נלוות",
   "nav.agent": "סוכן",
   "nav.agency": "סוכנות",
@@ -163,7 +195,7 @@ const HE: Dict = {
   "card.view": "צפייה",
   "card.help.upsold": "הצעת וואטסאפ נשלחה — מצפים לעמלה בהמרה.",
   "card.help.declined": "הסוכנת דילגה על הצעה זו.",
-  "card.help.past": "המלון כבר הוזמן דרך אטלס טראוול.",
+  "card.help.past": "המלון כבר הוזמן דרך טאפי.",
   "card.status.open": "ניתן למכור",
   "card.status.upsold": "הצעה נשלחה",
   "card.status.declined": "סורבה",
@@ -197,7 +229,7 @@ const HE: Dict = {
   "handled.declined.body": "הסוכנת בחרה לא לשלוח הצעת מלון להזמנה זו. לא נשלחה כל פנייה ללקוח.",
   "handled.past.label": "מלון בתיק",
   "handled.past.title": "המלון כבר הוזמן",
-  "handled.past.body": "ללקוח כבר יש מלון מוזמן דרך אטלס טראוול לתאריכים אלו. אין צורך בפנייה נוספת.",
+  "handled.past.body": "ללקוח כבר יש מלון מוזמן דרך טאפי לתאריכים אלו. אין צורך בפנייה נוספת.",
 
   // toasts
   "toast.upsold.title": "וואטסאפ נשלח",
@@ -253,6 +285,38 @@ const HE: Dict = {
   "newFlight.aria.close": "סגירה",
   "newFlight.toast.title": "ההזמנה נוספה",
   "newFlight.toast.body": "{name} · {origin} ← {destination}",
+
+  // chatbot
+  "chat.btn.aria": "פתיחת עוזר טאפי",
+  "chat.title": "עוזר טאפי",
+  "chat.subtitle": "שאלו על המדדים בזמן אמת",
+  "chat.greeting": "שלום! אני יכול לענות על שאלות לגבי אחוז ההמרה, ביצועי הסוכנים, וההזמנות שעדיין פתוחות בצבר. מה תרצו לדעת?",
+  "chat.placeholder": "שאלו על אחוז המרה, סוכן מסוים, או הצבר הפתוח…",
+  "chat.send": "שליחה",
+  "chat.send.aria": "שליחת הודעה",
+  "chat.close.aria": "סגירת צ׳אט",
+  "chat.thinking": "חושב…",
+  "chat.error": "לא הצלחתי להגיע לעוזר. נסו שוב בעוד רגע.",
+  "chat.suggest.closing": "מה אחוז ההמרה שלנו?",
+  "chat.suggest.top": "מי הסוכן המוביל ברבעון?",
+  "chat.suggest.left": "כמה עמלה עדיין על השולחן?",
+
+  // tooltips (agency view)
+  "tip.aria": "מידע נוסף",
+  "tip.closingRate.title": "אחוז המרה",
+  "tip.closingRate.body": "אחוז הטיסות שבהן הסוכן המיר את מכירת המלון. נוסחה: הומרו ÷ סך הטיסות.",
+  "tip.netProfit.title": "רווח נקי (עמלה)",
+  "tip.netProfit.body": "עמלה שנצברה בפועל מהזמנות שהומרו. נוסחה: 1% × סכום שווי המלון של הזמנות שהומרו.",
+  "tip.potentialProfit.title": "רווח פוטנציאלי",
+  "tip.potentialProfit.body": "עמלה שעדיין על השולחן מהזמנות שלא נשלחה אליהן הצעה. נוסחה: 1% × סכום שווי המלון של הזמנות פתוחות.",
+  "tip.leaderboard.title": "טבלת מובילים",
+  "tip.leaderboard.body": "אורך הסרגל = העמלה של הסוכן ביחס למוביל. \"{example}\" אומר {upsold} מלונות נמכרו באחוז המרה של {rate} מתוך ההזמנות שטופלו.",
+  "tip.mix.title": "פיזור הצבר",
+  "tip.mix.body": "התפלגות כל ההזמנות במעקב לפי ארבעת הסטטוסים. רוחב כל קטע פרופורציונלי למספר ההזמנות.",
+  "tip.mix.upsold": "הומרו — הצעת המלון נשלחה וההזמנה הומרה (נספרת בעמלה).",
+  "tip.mix.open": "פתוחות — הטיסה הוזמנה, הצעת המלון עדיין ממתינה לפנייה של הסוכן.",
+  "tip.mix.declined": "סורבו — הסוכן דילג על ההצעה. נספרת באחוז ההמרה אך לא מייצרת עמלה.",
+  "tip.mix.past": "מלון בתיק — ללקוח כבר היה מלון לתאריכים האלה, ולכן לא נדרשה פנייה.",
 };
 
 export const DICTIONARIES: Record<Lang, Dict> = { en: EN, he: HE };

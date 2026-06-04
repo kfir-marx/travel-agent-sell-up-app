@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useAgencyMetrics, useDemo } from "../lib/store";
 import CountUp from "./CountUp";
+import InfoTip from "./InfoTip";
 
 export default function AgencyView() {
   const metrics = useAgencyMetrics();
@@ -72,6 +73,11 @@ export default function AgencyView() {
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         <MetricCard
           eyebrow={t("agency.metric.closingRate")}
+          tip={
+            <InfoTip title={t("tip.closingRate.title")}>
+              {t("tip.closingRate.body")}
+            </InfoTip>
+          }
           value={
             <CountUp value={metrics.closingRate} format={(n) => fmt.percent(n, 1)} />
           }
@@ -84,6 +90,11 @@ export default function AgencyView() {
         />
         <MetricCard
           eyebrow={t("agency.metric.netProfit")}
+          tip={
+            <InfoTip title={t("tip.netProfit.title")}>
+              {t("tip.netProfit.body")}
+            </InfoTip>
+          }
           value={
             <CountUp
               value={metrics.netProfit}
@@ -100,6 +111,11 @@ export default function AgencyView() {
         />
         <MetricCard
           eyebrow={t("agency.metric.potentialProfit")}
+          tip={
+            <InfoTip title={t("tip.potentialProfit.title")}>
+              {t("tip.potentialProfit.body")}
+            </InfoTip>
+          }
           value={
             <CountUp
               value={metrics.potentialProfit}
@@ -119,9 +135,21 @@ export default function AgencyView() {
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-3">
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                {t("agency.leaderboard.eyebrow")}
-              </p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  {t("agency.leaderboard.eyebrow")}
+                </p>
+                <InfoTip title={t("tip.leaderboard.title")}>
+                  {t("tip.leaderboard.body", {
+                    example: t("agency.leaderboard.row", {
+                      upsold: perAgent[0]?.upsold ?? 0,
+                      rate: fmt.percent(perAgent[0]?.rate ?? 0, 0),
+                    }),
+                    upsold: perAgent[0]?.upsold ?? 0,
+                    rate: fmt.percent(perAgent[0]?.rate ?? 0, 0),
+                  })}
+                </InfoTip>
+              </div>
               <h2 className="mt-1 text-base font-semibold text-slate-900">
                 {t("agency.leaderboard.title")}
               </h2>
@@ -178,9 +206,32 @@ export default function AgencyView() {
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            {t("agency.mix.eyebrow")}
-          </p>
+          <div className="flex items-center gap-1.5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              {t("agency.mix.eyebrow")}
+            </p>
+            <InfoTip title={t("tip.mix.title")} align="end">
+              <p>{t("tip.mix.body")}</p>
+              <ul className="mt-2 space-y-1.5">
+                <li>
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 align-middle" />
+                  <span className="ms-2 align-middle">{t("tip.mix.upsold")}</span>
+                </li>
+                <li>
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400 align-middle" />
+                  <span className="ms-2 align-middle">{t("tip.mix.open")}</span>
+                </li>
+                <li>
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-slate-400 align-middle" />
+                  <span className="ms-2 align-middle">{t("tip.mix.declined")}</span>
+                </li>
+                <li>
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-slate-300 align-middle" />
+                  <span className="ms-2 align-middle">{t("tip.mix.past")}</span>
+                </li>
+              </ul>
+            </InfoTip>
+          </div>
           <h2 className="mt-1 text-base font-semibold text-slate-900">
             {t("agency.mix.title")}
           </h2>
@@ -225,12 +276,14 @@ export default function AgencyView() {
 
 function MetricCard({
   eyebrow,
+  tip,
   value,
   delta,
   accent,
   progress,
 }: {
   eyebrow: string;
+  tip?: React.ReactNode;
   value: React.ReactNode;
   delta: string;
   accent: "indigo" | "emerald" | "amber";
@@ -263,9 +316,12 @@ function MetricCard({
         className={`pointer-events-none absolute -top-16 h-40 w-40 rounded-full bg-gradient-to-br ${accentMap.glow} to-transparent blur-2xl`}
         style={{ insetInlineEnd: "-4rem" }}
       />
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-        {eyebrow}
-      </p>
+      <div className="flex items-center gap-1.5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          {eyebrow}
+        </p>
+        {tip}
+      </div>
       <p className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 tabular-nums">
         {value}
       </p>
