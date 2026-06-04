@@ -14,12 +14,12 @@ export default function AppShell() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3.5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-slate-900 to-slate-700 text-sm font-bold text-white shadow-sm">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-3 sm:gap-6 sm:px-6 sm:py-3.5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-gradient-to-br from-slate-900 to-slate-700 text-sm font-bold text-white shadow-sm">
               T
             </div>
-            <div>
+            <div className="hidden sm:block">
               <p className="text-sm font-semibold tracking-tight text-slate-900">
                 {t("nav.brand")}
               </p>
@@ -35,7 +35,7 @@ export default function AppShell() {
             labels={{ agent: t("nav.agent"), agency: t("nav.agency") }}
           />
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <LangToggle
               current={lang}
               onChange={setLang}
@@ -47,7 +47,7 @@ export default function AppShell() {
               <p className="text-[11px] text-slate-500">{t("nav.role")}</p>
             </div>
             <div
-              className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${me.avatarTint} text-xs font-semibold text-white shadow-sm ring-2 ring-white`}
+              className={`flex h-9 w-9 flex-none items-center justify-center rounded-full bg-gradient-to-br ${me.avatarTint} text-xs font-semibold text-white shadow-sm ring-2 ring-white`}
             >
               {me.initials}
             </div>
@@ -55,7 +55,7 @@ export default function AppShell() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-6 py-10">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
         <div key={view} className="view-fade">
           {view === "agent" ? <AgentView /> : <AgencyView />}
         </div>

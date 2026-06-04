@@ -132,7 +132,7 @@ export default function AgencyView() {
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-5">
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-3">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:col-span-3">
           <div className="flex items-end justify-between">
             <div>
               <div className="flex items-center gap-1.5">
@@ -161,7 +161,7 @@ export default function AgencyView() {
 
           <div className="mt-5 divide-y divide-slate-100">
             {perAgent.map((row, idx) => (
-              <div key={row.agent.id} className="flex items-center gap-4 py-3.5">
+              <div key={row.agent.id} className="flex items-center gap-3 py-3.5 sm:gap-4">
                 <span className="w-5 text-center text-xs font-semibold tabular-nums text-slate-400">
                   {idx + 1}
                 </span>
@@ -205,7 +205,7 @@ export default function AgencyView() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:col-span-2">
           <div className="flex items-center gap-1.5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
               {t("agency.mix.eyebrow")}
@@ -309,7 +309,7 @@ function MetricCard({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-inset ${accentMap.ring}`}
+      className={`relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-inset sm:p-6 ${accentMap.ring}`}
     >
       <div
         aria-hidden

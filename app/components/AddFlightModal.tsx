@@ -135,7 +135,7 @@ export default function AddFlightModal({ open, onClose }: Props) {
         }}
       >
         <form onSubmit={handleSubmit} className="flex flex-1 flex-col overflow-hidden">
-          <header className="relative flex items-start justify-between gap-4 border-b border-slate-100 px-7 py-6">
+          <header className="relative flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-5 sm:px-7 sm:py-6">
             <span
               aria-hidden
               className="pointer-events-none absolute -top-12 h-32 w-32 rounded-full bg-amber-300/25 blur-3xl"
@@ -170,7 +170,7 @@ export default function AddFlightModal({ open, onClose }: Props) {
             </button>
           </header>
 
-          <div className="flex-1 overflow-y-auto px-7 py-6">
+          <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field label={t("newFlight.field.name")} className="sm:col-span-2">
                 <input
@@ -245,7 +245,7 @@ export default function AddFlightModal({ open, onClose }: Props) {
             </div>
           </div>
 
-          <footer className="border-t border-slate-100 bg-slate-50/60 px-7 py-5">
+          <footer className="border-t border-slate-100 bg-slate-50/60 px-5 py-4 sm:px-7 sm:py-5">
             <div className="flex gap-3">
               <button
                 type="button"

@@ -152,7 +152,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
           transform: mounted ? "translateX(0)" : offscreenTransform,
         }}
       >
-        <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-slate-100 bg-white/95 px-7 py-6 backdrop-blur">
+        <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-slate-100 bg-white/95 px-5 py-5 backdrop-blur sm:px-7 sm:py-6">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400">
               {t("modal.bookingRef", { ref: f.bookingRef })}
@@ -174,7 +174,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
           </button>
         </header>
 
-        <div className="px-7 py-6">
+        <div className="px-5 py-5 sm:px-7 sm:py-6">
           <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
               {t("modal.itinerary")}
@@ -201,7 +201,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
                 align="end"
               />
             </div>
-            <div className="mt-5 grid grid-cols-3 gap-3 border-t border-slate-200 pt-4">
+            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-slate-200 pt-4 sm:grid-cols-3">
               <SmallStat label={t("modal.nights")} value={fmt.number(nights)} />
               <SmallStat label={t("modal.flightCost")} value={fmt.usd(f.flightCostUsd)} />
               <SmallStat label={t("modal.hotelValue")} value={fmt.usd(f.hotelCostUsd)} />
@@ -242,7 +242,7 @@ export default function FlightDetailModal({ flight, onClose }: Props) {
           )}
         </div>
 
-        <footer className="sticky bottom-0 z-10 border-t border-slate-100 bg-slate-50/85 px-7 py-5 backdrop-blur">
+        <footer className="sticky bottom-0 z-10 border-t border-slate-100 bg-slate-50/85 px-5 py-4 backdrop-blur sm:px-7 sm:py-5">
           {f.status === "open" ? (
             <>
               <div className="flex gap-3">
